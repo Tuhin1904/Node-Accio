@@ -4,6 +4,17 @@ const bodyParser = require('body-parser')
 const app = express();
 app.use(bodyParser.json());
 
+// app.use((req, res, next) =>{
+//     console.log(`Here is a new req for ${req.path} with methods ${req.method}`)
+//     next();
+// })
+const customLogger = (req, res, next) =>{
+        console.log(`Here is a new req for ${req.path} with methods ${req.method}`)
+        next();
+}
+
+app.use(customLogger)
+
 app.post('/',(req, res)=>{
   const {num1, num2, event} = req.body;
             switch(event){
@@ -32,7 +43,9 @@ app.post('/',(req, res)=>{
                         res.end(`Invalid req`);
                 }
 })
-
+app.use((req, res) => {
+    res.status(404).end('Invalid request!')
+})
 app.listen(3000, ()=>{
     console.log('Listing to port 3000!')
 })
